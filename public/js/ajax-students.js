@@ -23,13 +23,16 @@ $(document).ready(function() {
         var method ='GET';
 
 
+
+        console.log(new FormData(this));
+
         // FormData - perkelia visus duomenis is formos i JSON objekta
         // visi duomenys kurie yra formos inputuose pavirs i JSON objekta
 
         $.ajax({
             url: route, // formoje nurodome action
             method: method, // metodas bus GET
-            //data: new FormData(this),
+            data: new FormData(this),
             dataType: 'json', // numatytasis JSON, priklausomai nuo jqeury versijos gali skirtis sis numatytasis nustatymas XML
             //forma su persikrovimu mums grizta HTML, HTML reikalingas tam tikras duomenu apdorojimas
             // JSON duomenis kuriu apdoroti NEREIKIA !!!!! processData: false
