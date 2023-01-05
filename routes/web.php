@@ -24,4 +24,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/students', [StudentController::class, 'index'])->name('students.index');
 Route::get('/students/search', [StudentController::class, 'search'])->name('students.search');
+
 Route::get('/students/searchAjax', [StudentController::class, 'searchAjax'])->name('students.searchAjax');
+Route::post('/students/storeAjax', [StudentController::class, 'storeAjax'])->name('students.storeAjax');
+Route::post('/students/destroyAjax', [StudentController::class, 'destroyAjax'])->name('students.destroyAjax');
+
+// Route::post('/students/destroy/{student}', [StudentController::class, 'destroyAjax'])->name('students.destroyAjax');

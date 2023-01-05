@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
@@ -38,6 +39,27 @@ class StudentController extends Controller
     public function store(StoreStudentRequest $request)
     {
         //
+    }
+
+
+
+    public function storeAjax(StoreStudentRequest $request) {
+
+        $student = new Student;
+        $student->name = $request->student_name;
+        $student->surname = $request->surname;
+        $student->email = $request->email;
+        $student->avg_grade = $request->avg_grade;
+
+        $student->save();
+
+        //zinute
+        //studento informacija
+        return response()->json(array(
+            'student' => $student,
+            'success' => 'Student created successfully'
+        ));
+
     }
 
     /**
@@ -82,7 +104,18 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        $student->delete();
+    }
+
+    public function destroyAjax(Request $request) {
+        $student_id = $request->student_id;
+        $student = Student::find($student_id);
+        $student->delete();
+
+        return response()->json(array(
+            'success' => "Student $student_id $student->name $student->surname deleted successfully"
+        ));
+
     }
 
     public function search() {
@@ -119,8 +152,8 @@ class StudentController extends Controller
             ->orWhere('email', 'LIKE', "%$search%")
             ->orWhere('avg_grade', 'LIKE', "%$search%")
             ->get();
-        return response()->json($students);
+       // return response()->json($students);
 
-        // return response()->json($search);
+         return response()->json($students);
     }
 }
