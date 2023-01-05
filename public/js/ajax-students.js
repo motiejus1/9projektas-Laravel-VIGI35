@@ -41,7 +41,7 @@ $(document).ready(function() {
 
     //keyup - kai paspaudziama bet kuri klavisa
 
-    $("#search").on('keyup', function(e) {
+    $("#search").on('input', function(e) {
         var route = $('#ajaxSearch').attr('data-ajax-action-url')+'?search='+$(this).val(); //
         var method ='GET';
 
