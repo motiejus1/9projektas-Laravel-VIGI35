@@ -52,11 +52,11 @@
             <tbody class="students">
                 @foreach ($students as $student)
                     <tr class="student{{$student->id}}">
-                        <td>{{ $student->id }}</td>
-                        <td>{{ $student->name }}</td>
-                        <td>{{ $student->surname }}</td>
-                        <td>{{ $student->email }}</td>
-                        <td>{{ $student->avg_grade }}</td>
+                        <td class="student_id">{{ $student->id }}</td>
+                        <td class="student_name">{{ $student->name }}</td>
+                        <td class="student_surname">{{ $student->surname }}</td>
+                        <td class="student_email" >{{ $student->email }}</td>
+                        <td class="student_avg_grade">{{ $student->avg_grade }}</td>
                         <td>
                             {{-- <form action="{{route('student.destroy', $student)}}" method="POST">
                                 @csrf
@@ -68,6 +68,19 @@
                                 data-ajax-action-url="{{route('students.destroyAjax')}}" 
                                 data-student-id='{{$student->id}}'>
                                 Delete
+                            </button>
+                            {{-- 
+                                
+                                editAjax
+                                
+                                --}}
+                            <button
+                                class="edit-button btn btn-secondary"
+                                data-student-id="{{$student->id}}"
+                                data-ajax-action-url="{{route('students.editAjax')}}"
+                                data-bs-toggle="modal" data-bs-target="#studentEditModal"
+                            >
+                                Edit
                             </button>
 
                         </td>

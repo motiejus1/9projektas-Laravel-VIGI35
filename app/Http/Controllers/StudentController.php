@@ -79,9 +79,20 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
+
+     // Student - PHP klase
+     // $student - objektas
     public function edit(Student $student)
     {
         //
+    }
+    // Javascript
+    //Gali nesuprasti Studento klases(PHP kalba)
+    //
+    public function editAjax(Request $request) {
+        $student_id = $request->student_id;
+        $student = Student::find($student_id);
+        return response()->json($student);
     }
 
     /**
@@ -94,6 +105,25 @@ class StudentController extends Controller
     public function update(UpdateStudentRequest $request, Student $student)
     {
         //
+    }
+
+    public function updateAjax(Request $request) {
+
+        $student_id = $request->student_id;
+        $student = Student::find($student_id);
+
+        $student->name = $request->edit_student_name;
+        $student->surname = $request->edit_student_surname;
+        $student->email = $request->edit_student_email;
+        $student->avg_grade = $request->edit_student_avg_grade;
+
+        $student->save();
+
+        return response()->json(array(
+            'student' => $student,
+            'success'=> "Student $student_id $student->name $student->surname updated successfully"
+        ));
+
     }
 
     /**

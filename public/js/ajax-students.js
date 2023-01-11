@@ -228,6 +228,112 @@ $(document).ready(function() {
         });
     })
 
+    $('.edit-button').on('click', function(e){
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        //atidaro modalini langa
+        // kai mes uzdedinejame mygtukui funkcionaluma, kuris jau kazka atlieka, gali ivykti konfliktas
+        //( arba veiks mano aparsytas funkcionalumas, arba veiks defaultinis funkcionalumas)
+
+        //jeigu nebus konflikot - tiek aprasytas mano funkcionalumas, tiek modalo atsidarymas.
+
+        // console.log('edit button clicked');
+
+        //1. 'sugadinti' edit mygtuka, kad jis neattidarytu modalo.
+        //2. modalo atidaryma suprogramuoti sioje funkcijoje
+        var student_id = $(this).attr('data-student-id');
+        var route = $(this).attr('data-ajax-action-url')+'?student_id='+student_id;
+        // console.log(student_id);
+
+
+        $.ajax({
+            url: route,
+            method: 'GET', 
+            
+            dataType: 'JSON', 
+            processData: false,
+            contentType: false,
+            cache: false,
+            success:function(response) {
+                // console.log(response);
+                $('#student_id').val(response.id);
+                $('#edit_student_name').val(response.name);
+                $('#edit_student_surname').val(response.surname);
+                $('#edit_student_email').val(response.email);
+                $('#edit_student_avg_grade').val(response.avg_grade);
+
+            },
+            error:function(response) {
+                console.log(response); //404- nerasta
+            },
+        });
+
+
+    });
+
+    $('#editStudent').on('click', function(e) {
+        
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        
+        var route = $('#ajaxEdit').attr('data-ajax-action-url'); //
+
+        $.ajax({
+            url: route, // formoje nurodome action
+            method: 'POST', // metodas bus GET
+            data: {
+                student_id: $('#student_id').val(),
+                edit_student_name: $('#edit_student_name').val(),
+                edit_student_surname: $('#edit_student_surname').val(),
+                edit_student_email: $('#edit_student_email').val(),
+                edit_student_avg_grade: $('#edit_student_avg_grade').val()
+            }, 
+            dataType: 'JSON', 
+            success:function(response) {
+                console.log(response);
+
+                // var tr = $('.student' + response.id);
+                //student_name
+                // tr.find('.student_name').html(response.name);
+                // tr.find('.student_surname').html(response.name);
+                // tr.find('.student_email').html(response.name);
+                // tr.find('.student_avg_grade').html(response.name);
+
+                $('.student'+$('#student_id').val()+' .student_name').text(response.student.name);
+                $('.student'+$('#student_id').val()+' .student_surname').text(response.student.surname);
+                $('.student'+$('#student_id').val()+' .student_email').text(response.student.email);
+                $('.student'+$('#student_id').val()+' .student_avg_grade').text(response.student.avg_grade);
+
+
+                var modal = $('#studentEditModal');
+                modal.modal('hide');
+
+                alert = $('.alert');
+                alert.removeClass('d-none');
+                alert.html('');
+                alert.removeClass('alert-danger');
+                alert.addClass('alert-success');
+                alert.html(response.success);
+
+
+            },
+            error:function(response) {
+                console.log(response); //404- nerasta
+            },
+        });
+
+        // console.log(data);
+
+
+    })
+
 
     // $('#ajaxSearch').on('submit', function(e){
     //     e.preventDefault();

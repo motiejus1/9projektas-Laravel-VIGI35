@@ -29,4 +29,7 @@ Route::get('/students/searchAjax', [StudentController::class, 'searchAjax'])->na
 Route::post('/students/storeAjax', [StudentController::class, 'storeAjax'])->name('students.storeAjax');
 Route::post('/students/destroyAjax', [StudentController::class, 'destroyAjax'])->name('students.destroyAjax');
 
+Route::get('/students/editAjax', [StudentController::class, 'editAjax'])->name('students.editAjax');
+Route::post('/students/updateAjax', [StudentController::class, 'updateAjax'])->name('students.updateAjax');
+
 // Route::post('/students/destroy/{student}', [StudentController::class, 'destroyAjax'])->name('students.destroyAjax');
