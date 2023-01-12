@@ -8,17 +8,34 @@
         <div class="modal-body">
             <div id="ajaxCreate" data-ajax-action-url="{{route('students.storeAjax')}}" > 
                 @csrf
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="Name">
-
-                <label for="surname">Surname</label>
-                <input type="text" id="surname" name="surname" class="form-control" placeholder="Surname">
-
-                <label for="email">Email</label>
-                <input type="text" id="email" name="email" class="form-control" placeholder="Email">
-
-                <label for="avg_grade">Average grade</label>
-                <input type="text" id="avg_grade" name="avg_grade" class="form-control" placeholder="Average grade">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" id="student_name" name="name" class="form-control" placeholder="Name">
+                  <span class="invalid-feedback error_student_name" role="alert">
+                    <strong></strong>
+                  </span>
+                </div>
+                <div class="form-group">
+                  <label for="surname">Surname</label>
+                  <input type="text" id="surname" name="surname" class="form-control" placeholder="Surname">
+                  <span class="invalid-feedback error_surname" role="alert">
+                    <strong></strong>
+                  </span>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="text" id="email" name="email" class="form-control" placeholder="Email">
+                  <span class="invalid-feedback error_email" role="alert">
+                    <strong></strong>
+                  </span>
+                </div>
+                <div class="form-group">
+                  <label for="avg_grade">Average grade</label>
+                  <input type="text" id="avg_grade" name="avg_grade" class="form-control" placeholder="Average grade">
+                  <span class="invalid-feedback error_avg_grade" role="alert">
+                    <strong></strong>
+                  </span>
+                </div>
             </div>
         </div>
         <div class="modal-footer">

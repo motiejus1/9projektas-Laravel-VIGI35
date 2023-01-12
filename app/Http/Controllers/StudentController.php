@@ -7,6 +7,8 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Validator; // Validator klase, kuri mum prijungia tam tikrus irankius su kurias galime patikrinti duomenis
+
 class StudentController extends Controller
 {
     /**
@@ -27,7 +29,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        return view('students.create');
     }
 
     /**
@@ -38,12 +40,94 @@ class StudentController extends Controller
      */
     public function store(StoreStudentRequest $request)
     {
-        //
+
+        //Validator klase
+
+
+        //1. Patikriname duomenis is input lauku
+        //2. jei duomenys geri - issaugome duomenis i duomenu baze
+        //3. Kitu atveju - graziname atgal i forma su klaidomis
+
+
+        // student_name - ne ilgensi nei 11 simboliu duombazeje
+
+
+        //required - privalomas ir ar ne tuscias
+        //max:11 - ne ilgesnis nei 11 simboliu
+        //min:2 - ne trumpesnis nei 2 simboliai
+        //alpha - turi buti tik raides
+        //alpha_dash - turi buti tik raides, skaiciai, apatinis bruksnys(_) ir bruksnys(-)
+        //alpha_num - turi buti tik raides ir skaiciai
+        //email - turi buti tinkamas el. pasto adresas
+
+        //Pirma raide didzioji, likusios mazosios, leidziami simboliai tiktai - Algimantas-Juozas ???????? regex
+        // patikrinti ar ivestas skaicius yra LT telefono numeris
+
+        //student_name - privalomas laukas, ar jis ne tuscias, neilgesnis nei 11 simboliu, ir turi buti tiktai raides
+        //student_surname - privalomas laukas, ar jis ne tuscias, ne ilgesnis nei 64 simbolius, ir turi buti tiktai raides
+        //student_email - privalomas laukas, ar jis ne tuscias, , turi buti tinkamas el. pasto adresas
+        //student_avg_grade - privalomas laukas, ar jis ne tuscias, turi buti skaicius nuo 1 iki 100
+        
+        
+        //deprecated, jau nebepatartina
+
+        //$request->validate =  rules() metodas StoreStudentRequest klaseje
+    
+
+        //validate(masyva su taisyklemis) - jeigu viskas gerai, po sio metodo vykdomos sekancios eilutes
+        //jeigu ne - ties 76 eilute kodas nutruksta 
+
+
+        $stundent = new Student;
+        $stundent->name = $request->student_name;
+        $stundent->surname = $request->student_surname;
+        $stundent->email = $request->student_email;
+        $stundent->avg_grade = $request->student_avg_grade;
+
+        $stundent->save();
+
+        return redirect()->route('students.index')->with('success', 'Student created successfully.');
     }
 
 
 
-    public function storeAjax(StoreStudentRequest $request) {
+    public function storeAjax(Request $request) {
+
+
+        // Susikuriant savo validatoriu    
+
+        //validate() -metodas. Numatytaji validatoriu
+
+        //jei viskas gerai kodas vyksta toliau
+        //jei ne ties 102 eilute nutruksta kodas
+
+        $validator = Validator::make($request->all(), [
+            'student_name' => 'required|max:11|min:2|alpha',
+            'surname' => 'required|max:64|min:2|alpha',
+            'email' => 'required|email',
+            'avg_grade' => 'required|integer|min:1|max:100',
+        ]); //Validatoriaus objektas
+
+        //$validator->fails() - ar visi musu ivesti duomenis praejo taisykles(false), jeigu nepraejo (true)
+
+        if($validator->fails()) {
+            //jei nepraejo taisykles, graziname klaidos masyva
+
+            return response()->json(
+                array(
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                )
+            );
+
+        }
+        
+
+
+        //koki atsakyma gauna AJAX(javascript)?
+
+        //1. ajax nieko negauna
+
 
         $student = new Student;
         $student->name = $request->student_name;

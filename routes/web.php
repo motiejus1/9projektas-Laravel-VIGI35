@@ -32,4 +32,7 @@ Route::post('/students/destroyAjax', [StudentController::class, 'destroyAjax'])-
 Route::get('/students/editAjax', [StudentController::class, 'editAjax'])->name('students.editAjax');
 Route::post('/students/updateAjax', [StudentController::class, 'updateAjax'])->name('students.updateAjax');
 
+
+Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
 // Route::post('/students/destroy/{student}', [StudentController::class, 'destroyAjax'])->name('students.destroyAjax');

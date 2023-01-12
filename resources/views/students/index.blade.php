@@ -36,8 +36,10 @@
             
         </div>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentCreateModal">
-            Create student
+            Create student AJAX
           </button>
+
+        <a href="{{route('students.create')}}" class="btn btn-primary">Create student</a>  
         <table class="table table-striped">
             <thead>
                 <tr>

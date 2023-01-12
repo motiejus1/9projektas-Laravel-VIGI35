@@ -103,71 +103,89 @@ $(document).ready(function() {
         });
         
         var route = $('#ajaxCreate').attr('data-ajax-action-url'); //
-        var method='POST';
-
-        // var data = {
-        //    //blogai _token: csrf,
-        //     student_name:  $('#name').val(),
-        //     surname: $('#surname').val(),
-        //     email: $('#email').val(),
-        //     avg_grade: $('#avg_grade').val(),
-        // };
-
 
         $.ajax({
             url: route, // formoje nurodome action
             method: 'POST', // metodas bus GET
             data: {
-                student_name: $('#name').val(),
+                student_name: $('#student_name').val(),
                 surname: $('#surname').val(),
                 email: $('#email').val(),
                 avg_grade: $('#avg_grade').val()
-            }, //POST metodui
-            dataType: 'JSON', // numatytasis JSON, priklausomai nuo jqeury versijos gali skirtis sis numatytasis nustatymas XML
-            //forma su persikrovimu mums grizta HTML, HTML reikalingas tam tikras duomenu apdorojimas
-            // JSON duomenis kuriu apdoroti NEREIKIA !!!!! processData: false
-            //post metodas - proccessData: false
-
-            //POST metodas duomenu bazes irasymui
-            // POST gali grazinti arba HTML, arba JSON arba paprastu tekstu
+            }, 
+            dataType: 'JSON', 
             success:function(response) {
                 
+                //sekme - response.success
+                //klaida - response.success elemento netures
 
-
-                // 1. kai paspaudziamas create mygtukas, uzdaryti modal langa x
-                // 2. prie tbody prideti studenta 
-                // 3. isvalyti formos laukus
-                // 4. isvalyti klaidu pranesimus
-                // 5. ir atvaizduoti sekmes pranesima                
-                var tbody = $('.students');
-                var generatedHtml = '';
-                generatedHtml += '<tr>';
-                generatedHtml += '<td>'+response.student.id+'</td>';
-                generatedHtml += '<td>'+response.student.name+'</td>';
-                generatedHtml += '<td>'+response.student.surname+'</td>';
-                generatedHtml += '<td>'+response.student.email+'</td>';
-                generatedHtml += '<td>'+response.student.avg_grade+'</td>';
-                generatedHtml += '</tr>';
-                tbody.append(generatedHtml);
-
-                $('#name').val('');
-                $('#surname').val('');
-                $('#email').val('');
-                $('#avg_grade').val('');
-
-                var modal = $('#studentCreateModal');
-                modal.modal('hide');
-
-                alert = $('.alert');
-                alert.removeClass('d-none');
-                alert.html('');
-                alert.removeClass('alert-danger');
-                alert.addClass('alert-success');
-                alert.html(response.success);
-
+                if(response.success) {
+                    var tbody = $('.students');
+                    var generatedHtml = '';
+                    generatedHtml += '<tr>';
+                    generatedHtml += '<td>'+response.student.id+'</td>';
+                    generatedHtml += '<td>'+response.student.name+'</td>';
+                    generatedHtml += '<td>'+response.student.surname+'</td>';
+                    generatedHtml += '<td>'+response.student.email+'</td>';
+                    generatedHtml += '<td>'+response.student.avg_grade+'</td>';
+                    generatedHtml += '</tr>';
+                    tbody.append(generatedHtml);
+    
+                    $('#student_name').val('');
+                    $('#surname').val('');
+                    $('#email').val('');
+                    $('#avg_grade').val('');
+    
+                    var modal = $('#studentCreateModal');
+                    modal.modal('hide');
+    
+                    alert = $('.alert');
+                    alert.removeClass('d-none');
+                    alert.html('');
+                    alert.removeClass('alert-danger');
+                    alert.addClass('alert-success');
+                    alert.html(response.success);
+                } else {
 
 
 
+                    $('#student_name').removeClass('is-invalid');
+                    $('#surname').removeClass('is-invalid');
+                    $('#email').removeClass('is-invalid');
+                    $('#avg_grade').removeClass('is-invalid');
+
+                    $('.error_student_name').html('');
+                    $('.error_surname').html('');
+                    $('.error_email').html('');
+                    $('.error_avg_grade').html('');
+
+                    //response.errors
+                    // kaireje puse mes turime laukeliu vardus desineje mes turime klaidu pranesimus
+                    //errors
+//: 
+// {student_name: ["The student name field is privalomas."],…}
+// avg_grade
+// : 
+// ["The avg grade field is privalomas."]
+// email
+// : 
+// ["The email field is privalomas."]
+// student_name
+// : 
+// ["The student name field is privalomas."]
+// surname
+// : 
+// ["The surname field is privalomas."]
+                    //foreach($respone->errors as $key => $value)                    
+                    $.each(response.errors, function(key, value){
+                        //key yra laukelio vardas
+                        $('#'+key).addClass('is-invalid');
+                        $('.error_' + key).html('<strong>'+value[0]+'</strong>');
+                        console.log(key);//laukelio varda kuriame ivyko klaida
+                    })
+
+                    console.log('Klaida');
+                }
 
             },
             error:function(response) {
