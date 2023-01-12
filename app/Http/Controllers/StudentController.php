@@ -32,6 +32,32 @@ class StudentController extends Controller
         return view('students.create');
     }
 
+    public function createBulk() {
+        return view('students.createBulk');
+    }
+
+    public function storeBulk(Request $request) {
+        
+       // dd($request->student_name); //masyvu
+
+        $students_count = count($request->student_name); //kiek studentu yra - 2
+
+        for($i=0; $i<$students_count; $i++) {
+          $student = new Student;
+          $student->name = $request->student_name[$i];
+            $student->surname = $request->student_surname[$i];
+            $student->email = $request->student_email[$i];
+            $student->avg_grade = $request->student_avg_grade[$i];
+            $student->save();
+        }
+
+        //ajax > paprasta forma
+
+        return redirect()->route('students.index')->with('success', 'Students created successfully.');
+
+
+    }
+
     /**
      * Store a newly created resource in storage.
      *
