@@ -32,13 +32,38 @@ class StudentController extends Controller
         return view('students.create');
     }
 
-    public function createBulk() {
-        return view('students.createBulk');
+    public function createBulk(Request $request) {
+
+        $student_count = 2;
+
+        if($request->student_count) {
+            $student_count = $request->student_count;
+        }
+        
+        $student_count += $request->addStudent;
+
+        if($student_count<2) {
+            $student_count = 2;
+        }
+
+        return view('students.createBulk', ['student_count' => $student_count]);
+    }
+
+    public function createBulkAjax() {
+        return view('students.createbulkajax');
     }
 
     public function storeBulk(Request $request) {
         
        // dd($request->student_name); //masyvu
+
+       // .* - reiskia kad bus daugiau nei vienas elementas tokiu pat vardu
+       $request->validate([
+            'student_name.*' => 'required|max:11|min:2|alpha',
+            'student_surname.*' => 'required|max:64|min:2|alpha',
+            'student_email.*' => 'required|email',
+            'student_avg_grade.*' => 'required|integer|min:1|max:100'
+       ]);
 
         $students_count = count($request->student_name); //kiek studentu yra - 2
 
@@ -56,6 +81,44 @@ class StudentController extends Controller
         return redirect()->route('students.index')->with('success', 'Students created successfully.');
 
 
+    }
+
+    public function storeBulkAjax(Request $request) {
+
+
+        $validator = Validator::make($request->all(), [
+            'student_name.*' => 'required|max:11|min:2|alpha',
+            'student_surname.*' => 'required|max:64|min:2|alpha',
+            'student_email.*' => 'required|email',
+            'student_avg_grade.*' => 'required|integer|min:1|max:100',
+        ]); 
+
+        if($validator->fails()) {
+            return response()->json(
+                array(
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                )
+            );
+
+        }
+        
+
+
+        $students_count = count($request->student_name); //kiek studentu yra - 2
+
+        for($i=0; $i<$students_count; $i++) {
+          $student = new Student;
+          $student->name = $request->student_name[$i];
+            $student->surname = $request->student_surname[$i];
+            $student->email = $request->student_email[$i];
+            $student->avg_grade = $request->student_avg_grade[$i];
+            $student->save();
+        }
+
+        //ajax > paprasta forma
+
+       return response()->json(['success' => 'Students created successfully.']);
     }
 
     /**

@@ -406,4 +406,118 @@ $(document).ready(function() {
 
     // });
 
+    $('.addStudentCount').on('click', function(e) {
+        var studentsCreateTable = $('.studentsCreateTable');
+        var studentTemplate = $('.studentTemplate');
+        studentsCreateTable.append(studentTemplate.html());
+    })
+
+
+    //Javascriptas seka pokycius elemente studentsCreateTable
+    $('.studentsCreateTable').on('click','.minusStudentCount', function(e) {
+
+        var button = $(this); //mygtukas paspaustas
+
+        
+        // button.parent() - div col-1
+        //button.parent().parent(); - div row
+        // console.log(button.parent().parent());
+
+        button.parent().parent().remove();
+    });
+
+    $('.saveAllStudents').on('click',function(e) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        
+        var route = $(this).attr('data-ajax-action-url'); //
+
+        //student_name visus studentu vardus is visu input kuriu vardas yra students_name[] iskyrus studentTemplate
+
+        var student_name = $('.studentsCreateTable input[name="student_name[]"]');
+        var student_surname = $('.studentsCreateTable input[name="student_surname[]"]');
+        var student_email = $('.studentsCreateTable input[name="student_email[]"]');
+        var student_avg_grade = $('.studentsCreateTable input[name="student_avg_grade[]"]');
+
+
+
+        var student_name_array = [];
+        $.each(student_name, function(key, nameInput ) {
+            student_name_array.push(nameInput.value);
+            
+        })
+
+        var student_surname_array = [];
+        $.each(student_surname, function(key, surnameInput ) {
+            student_surname_array.push(surnameInput.value);           
+        })
+
+        var student_email_array = [];
+        $.each(student_email, function(key, emailInput ) {
+            student_email_array.push(emailInput.value);           
+        })
+
+        var student_avg_grade_array = [];
+        $.each(student_avg_grade, function(key, avgGradeInput ) {
+            student_avg_grade_array.push(avgGradeInput.value);           
+        })
+
+        
+
+        // console.log(student_name);
+
+
+
+        console.log(route);
+
+        $.ajax({
+            url: route, // formoje nurodome action
+            method: 'POST', // metodas bus GET
+            data: {
+                student_name: student_name_array,
+                 student_surname: student_surname_array,
+                student_email:  student_email_array,
+                student_avg_grade: student_avg_grade_array,
+            }, 
+            dataType: 'JSON', 
+            success:function(response) {
+                $('.studentsCreateTable .row input').removeClass('is-invalid');
+                //css selectoriujue skaiciuojam zmogiskai tai yra nuo 1
+                // 2 eilute 3 stulpeli
+                
+                var key_array = [];
+                var col_array = []; //stulpeli kur ivyko klaida
+                var row_array = []; //eilute kur ivyko klaida
+
+                $.each(response.errors, function(key, value) {
+                    key_array.push(key);
+                });
+
+                $.each(key_array, function(key, value) { 
+                    //padalinu teksto reiksme pagal .
+                       var col = value.split('.')[0];
+                          var row = parseInt(value.split('.')[1]) + 1;
+                            $('.studentsCreateTable .row:nth-child('+row+') input[name="'+ col+'[]"]').addClass('is-invalid');
+
+
+                });
+
+
+                $('.studentsCreateTable .row:nth-child(2) input[name="student_email[]"]').addClass('is-invalid');
+
+
+
+
+                console.log(response);
+            },
+            error:function(response) {
+                console.log(response); //404- nerasta
+            },
+        });
+    })
+
 });

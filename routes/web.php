@@ -35,6 +35,8 @@ Route::post('/students/updateAjax', [StudentController::class, 'updateAjax'])->n
 
 Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
 Route::get('/students/createbulk', [StudentController::class, 'createBulk'])->name('students.createbulk');
+Route::get('/students/createbulkajax', [StudentController::class, 'createBulkAjax'])->name('students.createbulkajax');
 Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
 Route::post('/students/storebulk', [StudentController::class, 'storeBulk'])->name('students.storebulk');
+Route::post('/students/storebulkajax', [StudentController::class, 'storeBulkAjax'])->name('students.storebulkajax');
 // Route::post('/students/destroy/{student}', [StudentController::class, 'destroyAjax'])->name('students.destroyAjax');
