@@ -82,7 +82,8 @@ class StudentController extends Controller
 
 
     }
-
+    // StoreStudentRequest $request - jisai eina per apsaugos failas StoreStudentRequest ajax uzklausa uzblokuos
+    // Request $request - tinginio request, neapsaugotas request
     public function storeBulkAjax(Request $request) {
 
 

@@ -489,25 +489,45 @@ $(document).ready(function() {
                 //css selectoriujue skaiciuojam zmogiskai tai yra nuo 1
                 // 2 eilute 3 stulpeli
                 
-                var key_array = [];
-                var col_array = []; //stulpeli kur ivyko klaida
-                var row_array = []; //eilute kur ivyko klaida
-
+                //var key_array = [];// error masyvo indeksai
+                
+                // foreach ($response->errors as $key =>$value)
+                //yra zinutes reiksme
                 $.each(response.errors, function(key, value) {
-                    key_array.push(key);
+                    //key_array.push(key);
+
+                    var col = key.split('.')[0];
+                    var row = parseInt(key.split('.')[1]) + 1; // css skaiciuoja nuo 1
+                    $('.studentsCreateTable .row:nth-child('+row+') input[name="'+ col+'[]"]').addClass('is-invalid');
+                    $('.studentsCreateTable .row:nth-child('+row+') input[name="'+ col+'[]"]').next().html('<strong>'+value[0]+'</strong>');
+
+
+
                 });
 
-                $.each(key_array, function(key, value) { 
-                    //padalinu teksto reiksme pagal .
-                       var col = value.split('.')[0];
-                          var row = parseInt(value.split('.')[1]) + 1;
-                            $('.studentsCreateTable .row:nth-child('+row+') input[name="'+ col+'[]"]').addClass('is-invalid');
+                //key_array = [student_avg_grade.0, student_email.0, student_name.0, student_surname.0, 
+                // student_avg_grade.1, student_email.1, student_name.1, student_surname.1 ...]
+                // explode(student_avg_grade.0, '.') = [
+                // 0,col => student_avg_grade
+                // 1,row => 0
+                //]
+
+                // mes jame prarandam zinutes reiksme
+                // $.each(key_array, function(key, value) { 
+                //     //padalinu teksto reiksme pagal .
+                //     // explode funkcijai yra lygi split funkcija
+                //        var col = value.split('.')[0];
+                //         var row = parseInt(value.split('.')[1]) + 1; // css skaiciuoja nuo 1
+                //             $('.studentsCreateTable .row:nth-child('+row+') input[name="'+ col+'[]"]').addClass('is-invalid');
+                //             // $('.studentsCreateTable .row:nth-child('+row+') input[name="'+ col+'[]"]') - input
+                //             //  css selectorius kuris pasirenka salia esanti elementa
+                //             $('.studentsCreateTable .row:nth-child('+row+') input[name="'+ col+'[]"]').next().html('<strong>Klaida</strong>');
 
 
-                });
+                // });
 
 
-                $('.studentsCreateTable .row:nth-child(2) input[name="student_email[]"]').addClass('is-invalid');
+               // $('.studentsCreateTable .row:nth-child(2) input[name="student_email[]"]').addClass('is-invalid');
 
 
 
