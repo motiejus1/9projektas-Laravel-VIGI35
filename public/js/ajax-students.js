@@ -499,6 +499,8 @@ $(document).ready(function() {
                     var col = key.split('.')[0];
                     var row = parseInt(key.split('.')[1]) + 1; // css skaiciuoja nuo 1
                     $('.studentsCreateTable .row:nth-child('+row+') input[name="'+ col+'[]"]').addClass('is-invalid');
+
+                    //vienos klaidos atvaizdavimui !!!! Pamastyti, kaip atvaizduot kelias. KLAIDOS GALI GRIZTI KELIOS!!!!!
                     $('.studentsCreateTable .row:nth-child('+row+') input[name="'+ col+'[]"]').next().html('<strong>'+value[0]+'</strong>');
 
 

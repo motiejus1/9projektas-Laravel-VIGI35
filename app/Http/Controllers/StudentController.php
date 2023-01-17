@@ -90,7 +90,7 @@ class StudentController extends Controller
         $validator = Validator::make($request->all(), [
             'student_name.*' => 'required|max:11|min:2|alpha',
             'student_surname.*' => 'required|max:64|min:2|alpha',
-            'student_email.*' => 'required|email',
+            'student_email.*' => 'required|email|min:11',
             'student_avg_grade.*' => 'required|integer|min:1|max:100',
         ]); 
 
