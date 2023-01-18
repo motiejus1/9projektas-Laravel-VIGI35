@@ -16,9 +16,112 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $students = Student::all();
+    public function index(Request $request)
+    {   
+
+        //all() - grazina visa informacija is modelio. Student - modelis.
+        // didejimo tvarka pagal id
+
+        //mazejimo tvarka pagal id
+        // PHP masyvo rikiavimo funkcija - rsort(), ksort(), sort(), asort(), asort() x
+        // SELECT * from students ORDER BY id DESC
+
+        //all() - pasako modeliui siusk uzklausa SELECT * from students, ir grazina objektu masyva
+        //() - pasako modeliui siusk uzklausa SELECT * from students ORDER BY id DESC, ir grazina objektu masyva
+        
+        //all() -> jisai savyje slepia get() funkcija
+
+        //query() - siuncia uzklausa i duombaze
+        //get() - uz objektu masyva(collection)
+        
+
+        //orderBy() - jis tik isiuncia uzklausa SELECT * from students ORDER BY id DESC, bet nesudeda i kolekcija
+        //get() - sudeda i kolekcija(objektu masyvas)
+
+
+        // studentu yra milijonas
+
+        // rikiuoja is DB puses       
+        //$students = Student::orderBy('avg_grade', 'DESC')->get();
+
+        //jis gauna duomenis, sukisa i kolekcija ir tik tada rikiuojama
+        //sortBy jis isrikiuoja jau gauta masyva
+
+        //200 studentu
+        //rikiuoti pagal id DESC arba created_at DESC
+        // $students = Student::orderBy('id', 'DESC')->get();
+        // $students = Student::orderBy('created_at', 'DESC')->get();
+
+        //$students - pasideda CACHE(laikinoji saugykla) - 500 min juos i sausainukas
+        // perrikiuoti duomenis 200 studentu
+        //??? ar man apsimoka dabar vel kreiptis i modeli ir duomenu baze? nelabai apsimoka
+        //is saugyklos students
+        // $students pagal kita kriteriju name ASC sortBy
+
+
+        // $students = Student::all()->sortBy('avg_grade', SORT_REGULAR, true);
+        //sort, sortBy, sordByDesc  - jos rikiuoja jau gauta masyva
+
+        //Kolekcija yra objektu masyvas, kuris turi metodus, kurie PANASUS i duomenu bazes
+        // kolekcija 20 studentu sortBy
+
+        // $students = Student::all()->sortBy('avg_grade', SORT_REGULAR, true);// true - mazejimo tvarka DESC
+        // $students = Student::all()->sortBy('avg_grade', SORT_REGULAR, false); //false - didejimo tvarka ASC
+
+        // atrinkti studentus kuriu vidurkis yra didesnis nei 50. avg_grade > 50
+        // SELECT * from students WHERE avg_grade > 50
+        // filtravimas
+        // $students = Student::where('avg_grade', '>', 50)->get();
+
+        //paieska
+        //$students = Student::where('name', 'LIKE', '%test%')->whereOr('surname', 'LIKE', '%test%')->get();
+
+        //o dabar panaudokit where ir orderBy kartu
+        // atrinkti studentus kuriu vidurkis yra didesnis nei 50. avg_grade > 50, pagal pazymi DESC
+        //filtravimas ir rikiavimas kartu
+        $students = Student::where('avg_grade', '>',50)->orderBy('avg_grade', 'DESC')->get();
+
+        //Filtravimas kolekcijoje
+        $students = Student::all()->where('avg_grade', '>', 50);
+
+        // Filtravimas ir rikiavimas kolekcijoje 
+        $students = Student::all()->where('avg_grade', '>', 50)->sortBy('avg_grade', SORT_REGULAR, true);
+        
+        //paieska kolekcijoje NEVEIKIA
+        // ieskoma reiksme - turime vienmate kolekcija!!!, grazinamas indeksas [1,2,3,4,5,6] ieskociau 1, grazintu 0
+        // paieskos funkcija -  vienmatei kolekcija [1,2,3,4,5,6] ieskociau 1, grazintu 1
+
+        //kai is API gauname JSON masyva.
+        //JSON masyva galime pasiversti i vienmati
+        //ir suzinoti mums reikiamu elementu reiksmes
+        //  $students = Student::all()->search('78');
+     
+        // dd( $students);
+
+       // !!!! $students = Student::all()->where('name', 'LIKE', '%test%');        
+
+        // prisijungimo modulis - mukms prisijungia dizainas BOOTSTRAP
+
+        $students = Student::paginate(15);
+
+        //paginate pabaigoje mes nerasome get(), nes jis jau yra paginate() funkcijoje
+
+        //paginate() turi buti paskutine funkcija
+        
+        $filter = $request->filter;
+        // $sortColumn = !empty($request->sortColumn) ? $request->sortColumn : 'id';
+        // $sortDirection = !empty($request->sortDirection) ? $request->sortDirection : 'DESC';
+
+
+        if(!empty($filter)) {
+            $students = Student::sortable()->where('avg_grade', '>', $filter)->paginate(15);  
+        } else  {
+            $students = Student::sortable()->paginate(15); 
+        }
+
+        // sortable metodas reikalauja get()
+            // $students = Student::sortable()->where('avg_grade', '>', $filter)->paginate(15);
+        // return view('students.index', ['students' => $students, 'filter' => $filter, 'sortColumn' => $sortColumn, 'sortDirection' => $sortDirection]);
         return view('students.index', ['students' => $students]);
     }
 

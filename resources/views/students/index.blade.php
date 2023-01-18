@@ -39,15 +39,33 @@
             Create student AJAX
           </button>
 
-        <a href="{{route('students.create')}}" class="btn btn-primary">Create student</a>  
+        <a href="{{route('students.create')}}" class="btn btn-primary">Create student</a>
+        
+        <form method="GET" action="{{route('students.index')}}">
+            <select name='sortColumn'>
+                <option value="id">Id</option>
+                <option value="name">Name</option>
+                <option value="surname">Surname</option>
+                <option value="email">Email</option>
+                <option value="avg_grade">Average grade</option>
+            </select> 
+            <select name='sortDirection' >
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+            <select name='filter'>
+                <option value="50">Positive grades</option> 
+            </select>
+            <button class="btn btn-primary" type="submit">Sort and filter</button> 
+        </form>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Email</th>
-                    <th>Average grade</th>
+                    <th>@sortablelink('id', 'ID')</th>
+                    <th>@sortablelink('name', 'Name')</th>
+                    <th>@sortablelink('surname', 'Surname')</th>
+                    <th>@sortablelink('email', 'Email')</th>
+                    <th>@sortablelink('avg_grade', 'Average Grade')</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -90,6 +108,14 @@
                 @endforeach
             </tbody>
         </table>
+        {{-- metodas atvaizduoti puslapiavimo numeriukams --}}
+        {{-- {{$students->links()}} --}}
+
+    
+      
+    {{-- {{ $students->appends(['sortColumn' => $sortColumn, 'sortDirection' => $sortDirection, 'filter' => $filter])->links() }} --}}
+        {{ $students->appends(\Request::except('page'))->links()}}
+
     </div>
            
 
